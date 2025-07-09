@@ -1,0 +1,16 @@
+{
+	"name": "komi-connect",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy --minify",
+		"cf-typegen": "wrangler types --env-interface CloudflareBindings"
+	},
+	"dependencies": {
+		"hono": "^4.8.3",
+		"image-size": "^2.0.2",
+		"jose": "^6.0.11"
+	},
+	"devDependencies": {
+		"wrangler": "^4.22.0"
+	}
+}
