@@ -2,7 +2,6 @@ package com.example.komiconnect.screens.search
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue

@@ -1,23 +1,37 @@
 package com.example.komiconnect.ui
 
 import android.content.ContentResolver
-import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
-import android.os.SystemClock
 import android.provider.MediaStore
 import com.auth0.android.jwt.JWT
 import com.example.komiconnect.R
 import com.example.komiconnect.network.UserStats
-import kotlinx.serialization.Serializable
-import java.io.FileNotFoundException
+import androidx.compose.ui.graphics.Color
 
-fun TokenToID(token: String): Int? {
-    var jwt: JWT = JWT(token)
+object TagConstants {
+    const val TAG_EVENTI = "Eventi"
+    const val TAG_ACQUISTI = "Acquisti"
+    const val TAG_CIBO = "Cibo"
+    const val TAG_PERSONE = "Persone"
+
+    val TAG_OPTIONS = listOf(TAG_EVENTI, TAG_CIBO, TAG_PERSONE, TAG_ACQUISTI)
+
+    val TAG_COLORS_MAP = mapOf(
+        TAG_EVENTI to Color(0xFF2196F3),
+        TAG_ACQUISTI to Color(0xFF4CAF50),
+        TAG_CIBO to Color(0xFFFF9800),
+        TAG_PERSONE to Color(0xFFE91E63)
+    )
+}
+
+
+fun tokenToID(token: String): Int? {
+    var jwt = JWT(token)
     var claim: Int? = jwt.getClaim("id").asInt()
     return claim
 }
@@ -50,28 +64,6 @@ fun uriToBitmap2(imageUri: Uri, contentResolver: ContentResolver): Bitmap {
     return bitmap
 }
 
-
-fun saveImageToStorage(
-    imageUri: Uri,
-    contentResolver: ContentResolver,
-    name: String = "IMG_${SystemClock.uptimeMillis()}"
-): Uri {
-    val bitmap = uriToBitmap2(imageUri, contentResolver)
-
-    val values = ContentValues()
-    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-    values.put(MediaStore.Images.Media.DISPLAY_NAME, name)
-
-    val savedImageUri =
-        contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-    val outputStream = savedImageUri?.let { contentResolver.openOutputStream(it) }
-        ?: throw FileNotFoundException()
-
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-    outputStream.close()
-
-    return savedImageUri
-}
 
 data class Badge(val title: String, val description: String, val image: Int)
 

@@ -1,19 +1,14 @@
 package com.example.komiconnect.ui
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.example.komiconnect.convention.ConventionScreen
-import com.example.komiconnect.convention.ConventionViewModel
-import com.example.komiconnect.post.PostScreen
-import com.example.komiconnect.post.PostViewModel
+import com.example.komiconnect.screens.convention.ConventionScreen
+import com.example.komiconnect.screens.convention.ConventionViewModel
+import com.example.komiconnect.screens.post.PostScreen
+import com.example.komiconnect.screens.post.PostViewModel
 import com.example.komiconnect.screens.add.AddPostScreen
 import com.example.komiconnect.screens.add.AddViewModel
 import com.example.komiconnect.screens.favorites.FavoritesScreen
@@ -48,9 +43,9 @@ sealed interface KomiConnectRoute {
     @Serializable data object Splash : KomiConnectRoute
 }
 
-@Serializable data class Profile(val ID : Int?) : KomiConnectRoute
-@Serializable data class Convention(val ID : Int?) : KomiConnectRoute
-@Serializable data class Post(val ID: Int?): KomiConnectRoute
+@Serializable data class Profile(val id : Int?) : KomiConnectRoute
+@Serializable data class Convention(val id : Int?) : KomiConnectRoute
+@Serializable data class Post(val id: Int?): KomiConnectRoute
 
 @Composable
 fun KomiConnectNavGraph(navController: NavHostController) {
@@ -79,7 +74,7 @@ fun KomiConnectNavGraph(navController: NavHostController) {
             SplashScreen()
         }
         composable<KomiConnectRoute.Login> {
-            LoginScreen(loginVm.state, loginVm::setToken, navController)
+            LoginScreen(loginVm::setToken, navController)
         }
         composable<KomiConnectRoute.Register> {
             RegistrationScreen(navController)
@@ -95,9 +90,8 @@ fun KomiConnectNavGraph(navController: NavHostController) {
         composable<Profile> { backStackEntry ->
             val profile: Profile = backStackEntry.toRoute()
             ProfileScreen(
-                profile.ID, profileVm.state,
+                profile.id, profileVm.state,
                 profileVm.meResponse, profileVm.error,
-                profileVm.saveResponse, profileVm.saveError,
                 profileVm.postResponse, profileVm.postError,
                 profileVm::fetchUserProfile, profileVm::saveDataChanges,
                 profileVm::uploadPicture,
@@ -108,7 +102,7 @@ fun KomiConnectNavGraph(navController: NavHostController) {
         composable<Convention> { backStackEntry ->
             val convention: Convention = backStackEntry.toRoute()
             ConventionScreen(
-                convention.ID, conventionVm.state,
+                convention.id, conventionVm.state,
                 conventionVm.meResponse, conventionVm.error,
                 conventionVm::fetchConventionProfile,
                 navController)
@@ -117,11 +111,11 @@ fun KomiConnectNavGraph(navController: NavHostController) {
         composable<Post> { backStackEntry ->
             val post: Post = backStackEntry.toRoute()
             PostScreen(
-                post.ID, postVm.state,
+                post.id, postVm.state,
                 postVm.imageResponse, postVm.userImageResponse,
                 postVm.postResponse, postVm.postError,
-                postVm.userResponse, postVm.userError,
-                postVm.conventionResponse, postVm.conventionError,
+                postVm.userResponse,
+                postVm.conventionResponse,
                 postVm::deletePost,
                 postVm::fetchPostProfile, postVm::fetchUserProfile, postVm::fetchConvention,
                 postVm::fetchFavorites, postVm::fetchLikes,

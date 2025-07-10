@@ -43,7 +43,7 @@ class HomeViewModel(
                                 newMap[post.id] = bitmap
                             }
                             is Failure -> {
-                                newMap[post.id] = null;
+                                newMap[post.id] = null
                             }
                         }
                     }

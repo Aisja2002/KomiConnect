@@ -1,4 +1,4 @@
-package com.example.komiconnect.convention
+package com.example.komiconnect.screens.convention
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.komiconnect.data.repositories.DataRepository
 import com.example.komiconnect.network.ApiService
 import com.example.komiconnect.network.ConventionResponse
-import com.example.komiconnect.screens.profile.ProfileState
 import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Result
 import dev.forkhandles.result4k.Success

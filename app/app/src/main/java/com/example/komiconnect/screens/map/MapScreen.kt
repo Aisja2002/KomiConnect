@@ -1,37 +1,15 @@
 package com.example.komiconnect.screens.map
 import android.Manifest
 import android.content.Intent
-import android.util.Log
-import android.graphics.Paint
 import android.net.Uri
-import android.os.Bundle
 import android.provider.Settings
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationSearching
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
@@ -49,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.komiconnect.network.ConventionResponse
 import com.example.komiconnect.ui.Convention
@@ -74,9 +51,7 @@ fun MapScreen(state: MapState, allConventions: (String) -> Unit, navController: 
         allConventions(state.token)
     }
 
-    AppBar(navController, "Mappa") {
-            innerPadding ->
-
+    AppBar(navController, "Mappa") { innerPadding ->
 
         val ctx = LocalContext.current
 
@@ -85,7 +60,6 @@ fun MapScreen(state: MapState, allConventions: (String) -> Unit, navController: 
         var showPermissionPermanentlyDeniedSnackbar by remember { mutableStateOf(false) }
 
         val locationService = remember { LocationService(ctx) }
-        // val coordinates by locationService.coordinates.collectAsStateWithLifecycle()
         var coordinates: Coordinates? by remember { mutableStateOf(null) }
 
         val scope = rememberCoroutineScope()
@@ -196,14 +170,13 @@ fun MapScreen(state: MapState, allConventions: (String) -> Unit, navController: 
         ) {
             }
         if(locationPermissions.statuses.any { it.value.isGranted }) {
-            ExtendedMap(state.conventions, coordinates, navController)
+            ExtendedMap(state.conventions, coordinates, navController, innerPadding)
         }
         }
     }
 
 @Composable
-fun ExtendedMap(conventions: List<ConventionResponse>, coordinates: Coordinates?, navController : NavController){
-    Log.i("Map", "CREATED " + coordinates.toString())
+fun ExtendedMap(conventions: List<ConventionResponse>, coordinates: Coordinates?, navController: NavController, innerPadding: PaddingValues){
     val romeColosseum = LatLng(41.890251, 12.492231)
 
     val cameraPositionState = rememberCameraPositionState {
@@ -215,7 +188,7 @@ fun ExtendedMap(conventions: List<ConventionResponse>, coordinates: Coordinates?
     }
 
     GoogleMap(
-        modifier = Modifier.fillMaxSize().zIndex(-10f).padding(bottom = 140.dp, top = 92.dp),
+        modifier = Modifier.fillMaxSize().zIndex(-10f).padding(innerPadding),
         cameraPositionState = cameraPositionState,
         properties = MapProperties(isMyLocationEnabled = true)
     ) {
@@ -231,6 +204,5 @@ fun ExtendedMap(conventions: List<ConventionResponse>, coordinates: Coordinates?
             )
         }
     }
-
 }
 

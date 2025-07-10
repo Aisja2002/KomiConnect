@@ -1,18 +1,11 @@
-package com.example.komiconnect.convention
+package com.example.komiconnect.screens.convention
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.provider.CalendarContract
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,44 +22,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import java.time.ZoneId
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.komiconnect.R
 import com.example.komiconnect.network.ConventionCoordinates
 import com.example.komiconnect.network.ConventionData
 import com.example.komiconnect.network.ConventionResponse
-import com.example.komiconnect.ui.Convention
-import com.example.komiconnect.ui.Coordinates
-import com.example.komiconnect.ui.Post
 import com.example.komiconnect.ui.composables.AppBar
-import com.example.komiconnect.ui.composables.PostItem
-import com.example.komiconnect.ui.composables.ZoomableImage
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
-import kotlin.collections.chunked
-import kotlin.collections.forEach
 import androidx.core.net.toUri
+import com.example.komiconnect.ui.composables.CircularProfileImage
+import com.example.komiconnect.ui.composables.ZoomableCircularImage
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -122,8 +101,7 @@ fun ConventionScreen(
             ) {
                 when {
                     conventionResponse != null -> {
-                        Column(
-                        ) {
+                        Column {
                             Row(
                                 modifier = Modifier.fillMaxWidth()
                                     .padding(top = 16.dp, end = 16.dp, start = 16.dp)
@@ -141,15 +119,19 @@ fun ConventionScreen(
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 if (state.profilePicture != null) {
-                                    ZoomableImage(state.profilePicture!!, 100)
+                                    ZoomableCircularImage(
+                                        image = state.profilePicture!!,
+                                        size = 100.dp
+                                    )
                                 } else {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.square_person),
+                                    CircularProfileImage(
+                                        imageBitmap = null,
+                                        placeholder = R.drawable.square_person,
                                         contentDescription = "Generic Profile Picture",
+                                        contentScale =  ContentScale.Crop,
+                                        size = 100.dp,
                                         modifier = Modifier
-                                            .height(100.dp)
-                                            .clip(CircleShape),
-                                        contentScale = ContentScale.Fit
+                                            .clip(CircleShape)
                                     )
                                 }
                             }

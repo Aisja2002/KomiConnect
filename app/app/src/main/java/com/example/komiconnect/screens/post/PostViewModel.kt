@@ -1,8 +1,7 @@
-package com.example.komiconnect.post
+package com.example.komiconnect.screens.post
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -60,10 +59,6 @@ class PostViewModel(
         private set
     var imageResponse by mutableStateOf<Bitmap?>(null)
     var userImageResponse by mutableStateOf<Bitmap?>(null)
-    var deleteResponse by mutableStateOf<String?>(null)
-        private set
-    var deleteError by mutableStateOf<String?>(null)
-        private set
 
 
     fun fetchPostProfile(token: String, id: Int?) {
@@ -83,9 +78,9 @@ class PostViewModel(
             }
             if (id!= null) {
                 var imageResult = api.getPostPicture(id)
-                when (imageResult) {
+                imageResponse = when (imageResult) {
                     is Success -> {
-                        imageResponse = BitmapFactory.decodeByteArray(
+                        BitmapFactory.decodeByteArray(
                             imageResult.value,
                             0,
                             imageResult.value.size
@@ -93,7 +88,7 @@ class PostViewModel(
                     }
 
                     is Failure -> {
-                        imageResponse = null
+                        null
                     }
                 }
             }
@@ -111,9 +106,9 @@ class PostViewModel(
 
                     if (id!= null) {
                         var imageResult = api.getUserPicture(id)
-                        when (imageResult) {
+                        userImageResponse = when (imageResult) {
                             is Success -> {
-                                userImageResponse = BitmapFactory.decodeByteArray(
+                                BitmapFactory.decodeByteArray(
                                     imageResult.value,
                                     0,
                                     imageResult.value.size
@@ -121,7 +116,7 @@ class PostViewModel(
                             }
 
                             is Failure -> {
-                                userImageResponse = null
+                                null
                             }
                         }
                     }

@@ -44,7 +44,7 @@ class ProfileViewModel(
         viewModelScope.launch {
             val api = ApiService(token)
             val result = if (id == null) {
-                api.Me()
+                api.me()
             } else {
                 api.getUserFromId(id)
             }
@@ -113,7 +113,7 @@ class ProfileViewModel(
                                 }
 
                                 is Failure -> {
-                                    newMap[post.id] = null;
+                                    newMap[post.id] = null
                                 }
                             }
                         }

@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun SettingsScreen(state: StateFlow<SettingsState>, onLogout: () -> Unit, onThemeSelected: (Theme) -> Unit, navController: NavController) {
     val s = state.collectAsState()
-    AppBar(navController, "Settings") {
+    AppBar(navController, "Impostazioni") {
             innerPadding ->
         Column(
             modifier = Modifier

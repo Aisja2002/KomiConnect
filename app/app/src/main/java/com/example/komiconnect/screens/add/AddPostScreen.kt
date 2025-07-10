@@ -2,14 +2,10 @@ package com.example.komiconnect.screens.add
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
-import androidx.activity.result.launch
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,11 +37,9 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,26 +54,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.komiconnect.R
 import com.example.komiconnect.network.ApiService
 import com.example.komiconnect.network.ConventionResponse
 import com.example.komiconnect.network.PostData
 import com.example.komiconnect.network.PostRequest
-import com.example.komiconnect.ui.KomiConnectNavGraph
 import com.example.komiconnect.ui.KomiConnectRoute
+import com.example.komiconnect.ui.TagConstants
 import com.example.komiconnect.ui.composables.AppBar
 import com.example.komiconnect.ui.rememberCameraLauncher
-import com.example.komiconnect.ui.saveImageToStorage
 import com.example.komiconnect.ui.uriToBitmap
 import com.image.cropview.CropType
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.komiconnect.ui.uriToBitmap2
 import com.image.cropview.ImageCrop
 import dev.forkhandles.result4k.Failure
@@ -100,18 +89,9 @@ fun AddPostScreen(state: AddState,
     var titleText by remember { mutableStateOf("") }
     var descriptionText by remember { mutableStateOf("") }
     var selectedTag by remember { mutableStateOf<String?>(null) }
-    val tagEvento = "Eventi"
-    val tagAcquisti = "Acquisti"
-    val tagCibo = "Cibo"
-    val tagPersone = "Persone"
-    val tagOptions = listOf("Eventi", "Cibo", "Persone", "Acquisti")
-    val tagColorsMap = mapOf(
+    val tagOptions = TagConstants.TAG_OPTIONS
+    val tagColorsMap = TagConstants.TAG_COLORS_MAP
 
-        tagEvento to Color(0xFF2196F3),
-        tagAcquisti to Color(0xFF4CAF50),
-        tagCibo to Color(0xFFFF9800),
-        tagPersone to Color(0xFFE91E63)
-    )
 
     val scrollState = rememberScrollState()
     val context = LocalContext.current
@@ -140,7 +120,6 @@ fun AddPostScreen(state: AddState,
 
                 if (imageBitmap != null) {
                     loadedImage = imageBitmap
-
                     isImageLoaded = true
                 }
             }
@@ -164,19 +143,16 @@ fun AddPostScreen(state: AddState,
                 .wrapContentHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (imageCrop != null) {
                 var aspectRatio = imageWidth / imageHeight
                 var screenWidth = LocalConfiguration.current.screenWidthDp.dp
                 var targetHeight = screenWidth / aspectRatio
+
                 imageCrop.ImageCropView(
                     cropType = CropType.SQUARE,
                     modifier = Modifier
                         .width(screenWidth * 0.75f)
                         .height(targetHeight * 0.75f)
                 )
-            } else {
-                Text("No image loaded to crop.")
-            }
 
             Row(
                 modifier = Modifier
@@ -286,7 +262,7 @@ fun AddPostScreen(state: AddState,
                             singleLine = true
                         )
 
-                        Box() {
+                        Box {
                             OutlinedTextField(
                                 value = selectedConvention?.data?.name ?: "A che fiera eri?",
                                 onValueChange = { },
@@ -432,47 +408,6 @@ fun AddPostScreen(state: AddState,
                         }
                     }
                 }
-            }
-        }
-    }
-}
-
-
-@Composable
-fun CameraScreen() {
-    val ctx = LocalContext.current
-    val cameraLauncher = rememberCameraLauncher(
-        onPictureTaken = { imageUri -> saveImageToStorage(imageUri, ctx.contentResolver) }
-    )
-
-    SideEffect {
-        println(cameraLauncher.capturedImageUri)
-    }
-
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(innerPadding).fillMaxSize()
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                Button(onClick = cameraLauncher::captureImage) {
-                    Text("Take a Picture")
-                }
-            }
-
-            if (cameraLauncher.capturedImageUri.path?.isNotEmpty() == true) {
-                AsyncImage(
-                    ImageRequest.Builder(ctx)
-                        .data(cameraLauncher.capturedImageUri)
-                        .crossfade(true)
-                        .build(),
-                    "Captured image"
-                )
             }
         }
     }

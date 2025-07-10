@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.komiconnect.data.repositories.DataRepository
 import com.example.komiconnect.network.ApiService
 import com.example.komiconnect.network.ConventionResponse
-import com.example.komiconnect.network.UserResponse
 import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Success
 import kotlinx.coroutines.launch

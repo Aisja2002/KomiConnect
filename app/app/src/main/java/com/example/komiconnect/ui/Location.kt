@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.provider.Settings
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.google.android.gms.location.Priority
@@ -27,7 +26,6 @@ class LocationService(private val ctx: Context) {
     val coordinates = _coordinates.asStateFlow()
 
     private val _isLoadingLocation = MutableStateFlow(false)
-    val isLoadingLocation = _isLoadingLocation.asStateFlow()
 
     suspend fun getCurrentLocation(usePreciseLocation: Boolean = false): Coordinates? {
         val locationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)

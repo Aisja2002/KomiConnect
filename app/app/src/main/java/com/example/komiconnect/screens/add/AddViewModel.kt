@@ -1,6 +1,5 @@
 package com.example.komiconnect.screens.add
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,10 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.komiconnect.data.repositories.DataRepository
 import com.example.komiconnect.network.ApiService
 import com.example.komiconnect.network.ConventionResponse
-import com.example.komiconnect.network.PostData
-import com.example.komiconnect.network.PostRequest
-import com.example.komiconnect.network.UserData
-import com.example.komiconnect.screens.login.LoginState
 import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Success
 import kotlinx.coroutines.launch

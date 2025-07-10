@@ -5,9 +5,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import org.koin.dsl.module
 import android.content.Context
-import com.example.komiconnect.convention.ConventionViewModel
+import com.example.komiconnect.screens.convention.ConventionViewModel
 import com.example.komiconnect.data.repositories.DataRepository
-import com.example.komiconnect.post.PostViewModel
+import com.example.komiconnect.screens.post.PostViewModel
 import com.example.komiconnect.screens.add.AddViewModel
 import com.example.komiconnect.screens.favorites.FavoritesViewModel
 import com.example.komiconnect.screens.home.HomeViewModel

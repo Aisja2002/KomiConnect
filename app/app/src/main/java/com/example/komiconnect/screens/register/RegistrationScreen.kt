@@ -1,5 +1,6 @@
 package com.example.komiconnect.screens.register
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +35,9 @@ import androidx.navigation.NavController
 import com.example.komiconnect.R
 import com.example.komiconnect.network.NetworkAPI
 import com.example.komiconnect.ui.KomiConnectRoute
+import com.example.komiconnect.ui.composables.LabeledTextField
+import com.example.komiconnect.ui.composables.SimplePasswordField
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -83,23 +85,19 @@ fun RegistrationScreen(navController: NavController) {
                 )
             )
 
-
-            OutlinedTextField(
+            LabeledTextField(
                 value = username,
-                onValueChange = { username = it },
-                label = { Text("Inserisci username") },
-                singleLine = true,
+                onValueChange = {username = it},
+                label = "Inserisci username",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 40.dp)
-            )
+                )
 
-            OutlinedTextField(
+            SimplePasswordField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Inserisci password") },
-                visualTransformation = PasswordVisualTransformation(),
-                singleLine = true,
+                label = "Inserisci password",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
@@ -107,15 +105,7 @@ fun RegistrationScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    coroutineScope.launch {
-                        val (message, success) = netAPI.Register(username, password, secret)
-                        if(success) {
-                            Toast.makeText(context, "Registration successful!", Toast.LENGTH_LONG).show()
-                            navController.navigate(KomiConnectRoute.Login)
-                        } else {
-                            Toast.makeText(context, "Registration failed. $message", Toast.LENGTH_LONG).show()
-                        }
-                    }
+                    performRegister(coroutineScope, username, password, secret, netAPI, context, navController)
                 },
                 enabled = username.isNotBlank() && password.isNotBlank(),
                 modifier = Modifier
@@ -133,6 +123,27 @@ fun RegistrationScreen(navController: NavController) {
                     .padding(top = 32.dp)
                     .clickable { navController.navigate(KomiConnectRoute.Login) }
             )
+        }
+    }
+}
+
+
+private fun performRegister(
+    coroutineScope: CoroutineScope,
+    username: String,
+    password: String,
+    secret: String,
+    netAPI: NetworkAPI,
+    context: Context,
+    navController: NavController
+) {
+    coroutineScope.launch {
+        val (message, success) = netAPI.Register(username, password, secret)
+        if (success) {
+            Toast.makeText(context, "Registration successful!", Toast.LENGTH_LONG).show()
+            navController.navigate(KomiConnectRoute.Login)
+        } else {
+            Toast.makeText(context, "Registration failed. $message", Toast.LENGTH_LONG).show()
         }
     }
 }

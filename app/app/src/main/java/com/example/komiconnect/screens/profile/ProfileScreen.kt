@@ -2,12 +2,9 @@ package com.example.komiconnect.screens.profile
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,12 +37,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -57,11 +51,13 @@ import com.example.komiconnect.network.PostResponse
 import com.example.komiconnect.network.UserData
 import com.example.komiconnect.network.UserResponse
 import com.example.komiconnect.ui.Post
-import com.example.komiconnect.ui.TokenToID
+import com.example.komiconnect.ui.TagConstants
 import com.example.komiconnect.ui.composables.AppBar
 import com.example.komiconnect.ui.composables.BadgeItem
+import com.example.komiconnect.ui.composables.CircularProfileImage
 import com.example.komiconnect.ui.composables.PostItem
-import com.example.komiconnect.ui.composables.ZoomableImage
+import com.example.komiconnect.ui.composables.ZoomableCircularImage
+import com.example.komiconnect.ui.tokenToID
 import com.example.komiconnect.ui.uriToBitmap
 import com.image.cropview.CropType
 import com.image.cropview.ImageCrop
@@ -73,7 +69,6 @@ fun ProfileScreen(
     userID: Int?,
     state: ProfileState,
     userResponse: UserResponse?, error: String?,
-    saveResponse: String?, saveError: String?,
     postResponse: Array<PostResponse>?, postError: String?,
     fetchUser: (String, Int?) -> Unit, saveChanges: (UserData, String) -> Unit,
     uploadPicture: (String,Int,ByteArray) -> Unit,
@@ -81,13 +76,13 @@ fun ProfileScreen(
     navController: NavController,
 ) {
 
-    val myID = TokenToID(state.token)
+    val myID = tokenToID(state.token)
     val context = LocalContext.current
 
     var isImageLoaded by remember { mutableStateOf(false) }
     var loadedImage: Bitmap? by remember { mutableStateOf(null) }
 
-    val pickMedia =  rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+    val pickMedia =  rememberLauncherForActivityResult(PickVisualMedia()) { uri ->
             uri?.let {
                 val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 context.contentResolver.takePersistableUriPermission(uri, flag)
@@ -117,17 +112,7 @@ fun ProfileScreen(
     var currentEditableLocation by remember { mutableStateOf(userData.location) }
     var currentEditableBio by remember { mutableStateOf(userData.bio) }
     val scrollState = rememberScrollState()
-    val tagEvento = "Eventi"
-    val tagAcquisti = "Acquisti"
-    val tagCibo = "Cibo"
-    val tagPersone = "Persone"
-
-    val tagColorsMap = mapOf(
-        tagEvento to Color(0xFF2196F3),
-        tagAcquisti to Color(0xFF4CAF50),
-        tagCibo to Color(0xFFFF9800),
-        tagPersone to Color(0xFFE91E63)
-    )
+    val tagColorsMap = TagConstants.TAG_COLORS_MAP
 
     LaunchedEffect(userResponse) {
         currentEditableLocation = userResponse?.data?.location ?: "Luogo non specificato"
@@ -149,7 +134,6 @@ fun ProfileScreen(
                 .wrapContentHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (imageCrop != null) {
                 var aspectRatio = imageWidth/imageHeight
                 var screenWidth = LocalConfiguration.current.screenWidthDp.dp
                 var targetHeight = screenWidth / aspectRatio
@@ -159,9 +143,6 @@ fun ProfileScreen(
                         .width(screenWidth * 0.75f)
                         .height(targetHeight * 0.75f)
                 )
-            } else {
-                Text("No image loaded to crop.")
-            }
 
             Row(
                 modifier = Modifier
@@ -238,17 +219,22 @@ fun ProfileScreen(
                             }
 
                             if (state.profilePicture != null) {
-                                ZoomableImage(state.profilePicture!!, 100)
+                                ZoomableCircularImage(
+                                    image = state.profilePicture!!,
+                                    size = 100.dp
+                                )
                             } else {
-                                Image(
-                                    painter = painterResource(id = R.drawable.square_person),
+                                CircularProfileImage(
+                                    imageBitmap = null,
+                                    placeholder = R.drawable.square_person,
                                     contentDescription = "Generic Profile Picture",
+                                    contentScale =  ContentScale.Crop,
+                                    size = 100.dp,
                                     modifier = Modifier
-                                        .height(100.dp)
-                                        .clip(CircleShape),
-                                    contentScale = ContentScale.Fit
+                                        .clip(CircleShape)
                                 )
                             }
+
 
                             if (userID == myID || userID == null && !editingMode) {
                                 Text(

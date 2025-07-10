@@ -1,6 +1,5 @@
 package com.example.komiconnect.network
 
-import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.*
@@ -66,7 +65,7 @@ class ApiService(val token: String, val client: HttpClient = HttpClient(CIO){
         }
     }
 }){
-    suspend fun Me(): Result<UserResponse, String> {
+    suspend fun me(): Result<UserResponse, String> {
         try {
             val response = client.get("$BASE_URL/me") {
                 contentType(ContentType.Application.Json)
