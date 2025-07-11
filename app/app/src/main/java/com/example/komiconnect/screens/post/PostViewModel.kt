@@ -63,6 +63,7 @@ class PostViewModel(
 
     fun fetchPostProfile(token: String, id: Int?) {
         viewModelScope.launch {
+            imageResponse = null
             val api = ApiService(token)
             val result = api.getPostFromId(id)
             when (result) {

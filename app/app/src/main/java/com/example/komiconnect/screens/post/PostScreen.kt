@@ -23,6 +23,7 @@ import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -291,6 +292,12 @@ fun PostImage(image: Bitmap?, label: String, tagColor: Color) {
                     .aspectRatio(1f)
                     .padding(16.dp)
                     .clip(RoundedCornerShape(8.dp))
+            )
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(50.dp),
+                strokeWidth = 4.dp
             )
         }
 
