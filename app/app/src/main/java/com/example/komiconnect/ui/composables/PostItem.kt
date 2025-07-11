@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,6 +57,12 @@ fun PostItem(item: PostResponse, image: Bitmap?, tagColorsMap: Map<String, Color
                     contentDescription = "Generic Post Picture",
                     modifier = Modifier.aspectRatio(7f / 7f).clip(RoundedCornerShape(16.dp)),
                     contentScale = ContentScale.Crop
+                )
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(50.dp),
+                    strokeWidth = 4.dp
                 )
             }
 
